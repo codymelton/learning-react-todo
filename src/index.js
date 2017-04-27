@@ -4,54 +4,50 @@ var ReactDOM = require("react-dom");
 
 require("./index.css");
 
-function TodosList(props) {
-  return (
-    <div>
-      <ul>
-        {props.todos.map(function(item) {
-          return <li>{item.text}</li>;
-        })}
-      </ul>
-    </div>
-  );
-}
+const TodoList = props => (
+  <div>
+    <ul>
+      {props.todos.map(item =>
+        <p> {item.text} </p>
+      )}
+    </ul>
+  </div>
+);
 
-var App = createReactClass({
-  getInitialState: function() {
-    return {
-      todos: null,
-      newTodoText: null
-    };
-  },
-  componentDidMount: function() {
-    var data = [
+class App extends React.Component {
+  state = {
+    todos: null,
+    newTodoText: null
+  };
+  componentDidMount() {
+    var todos = [
       { text: "clean room" },
       { text: "do laundry" },
       { text: "walk dog" },
       { text: "learn to spell...or not." }
     ];
-    var self = this;
-    setTimeout(function() {
-      self.setState({ todos: data });
+
+    setTimeout(() => {
+      this.setState({ todos }); //same as todos:todos
     }, 250);
     //set state of todos to use data
-  },
+  }
 
-  updateTodoText: function(event) {
-    this.setState({ newTodoText: event.target.value });
-  },
+  updateTodoText = e => {
+    this.setState({ newTodoText: e.target.value })
+  }
 
-  submitTodo: function(event) {
-    event.preventDefault();
+  submitTodo(e) {
+    e.preventDefault();
     var todo = { text: this.state.newTodoText };
     this.setState({ todos: this.state.todos.concat([todo]), newTodoText: "" });
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className="jumbotron">
         <h3> What should I do now??? </h3>
-        {this.state.todos ? <TodosList todos={this.state.todos} /> : null}
+        {this.state.todos ? <TodoList todos={this.state.todos} /> : null}
         <form onSubmit={this.submitTodo}>
           <input
             placeholder="new todo text"
@@ -64,6 +60,6 @@ var App = createReactClass({
       </div>
     );
   }
-});
+}
 
 ReactDOM.render(<App />, document.getElementById("root"));
